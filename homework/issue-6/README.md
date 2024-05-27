@@ -10,5 +10,5 @@ with open("aqi.json","wb") as fd:
        fd.write(chunk)
 
 
-### [python code連結](https://github.com/kalmiavicky/vicky_window/blob/main/homework/issue6/lesson3.ipynb)
-### [json檔連結](https://github.com/kalmiavicky/vicky_window/blob/main/homework/issue6/aqi2.csv)
+### [python code連結](https://github.com/kalmiavicky/vicky_window/blob/main/homework/issue-6/lesson3.ipynb
+### [json檔連結](https://github.com/kalmiavicky/vicky_window/blob/main/homework/issue-6/aqi.json)
