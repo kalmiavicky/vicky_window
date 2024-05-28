@@ -8,13 +8,12 @@ class Window(tk.Tk):
         self.title("pack1")  #參數
         self.geometry("300x200")  #
 
-        ttk.Button(self,text="Top").pack()
-       
+        ttk.Button(self,text="Top").pack(fill="x") #fill="x"滿寬
 
-        ttk.Button(self,text="Middle").pack()
+        ttk.Button(self,text="Middle").pack(fill="x")
         
 
-        ttk.Button(self,text="Bottom").pack()
+        ttk.Button(self,text="Bottom").pack(fill="x")
         
       
 if __name__ == '__main__':
