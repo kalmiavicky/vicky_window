@@ -19,5 +19,6 @@ def get_names() -> list[str]:
 if __name__ == '__main__':
     names:list[str] = get_names()
     window:tk.Tk=tk.Tk()  #開視窗
+    window.title("我的第一個GUI程式")  #視窗標題
     window.mainloop()     #開視窗
 
