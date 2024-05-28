@@ -8,17 +8,18 @@ def get_names() -> list[str]:
     names:list[str] = content.split()  #算出有幾個名字 
     return names
 # names:list[str]=get_names()   #文件變數 所以和上面不會起充突
+
 class Window(tk.Tk):
-    def __init__(self):
-        super().__init__() #呼叫父類別
+    def __init__(self,title:str="hello! tkinter!",**kwargs): #**可有可無的隱數
+        super().__init__(**kwargs) #呼叫父類別
         #多做一些事
-        self.title("我的第一個GUI程式")  #視窗標題
+        self.title(title)  #參數
 
 
 
 if __name__ == '__main__':
     names:list[str] = get_names()
-    window:Window = Window()  
-   
+    window:Window = Window(title="我的第一個GUI程式")  #沒有輸入會用上面hello! tkinter當預設視窗標題
+    
     window.mainloop()   
 
