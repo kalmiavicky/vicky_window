@@ -22,7 +22,7 @@ class Window(tk.Tk):
 
 
                                   ) 
-        label.pack(padx=100,pady=40)
+        label.pack(padx=100,pady=40) # 邊距
 
 
 
