@@ -10,6 +10,7 @@
 import tkinter as tk
 
 
+
 def get_names() -> list[str]:
     with open('names.txt',encoding='utf-8') as file:
         content:str = file.read()      #回傳字串
@@ -21,4 +22,3 @@ if __name__ == '__main__':
     window:tk.Tk=tk.Tk()  #開視窗
     window.title("我的第一個GUI程式")  #視窗標題
     window.mainloop()     #開視窗
-
