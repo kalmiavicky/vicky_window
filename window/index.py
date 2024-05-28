@@ -7,6 +7,7 @@
 # for name in names:
 #     print(name)
 
+import tkinter as tk
 
 
 def get_names() -> list[str]:
@@ -17,4 +18,6 @@ def get_names() -> list[str]:
 # names:list[str]=get_names()   #文件變數 所以和上面不會起充突
 if __name__ == '__main__':
     names:list[str] = get_names()
-    print(names)    
+    window:tk.Tk=tk.Tk()  #開視窗
+    window.mainloop()     #開視窗
+
