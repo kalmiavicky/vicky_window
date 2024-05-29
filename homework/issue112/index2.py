@@ -13,7 +13,7 @@ class Window(tk.Tk):
         ttk.Button(self,text="Middle").pack(fill="x")
         
 
-        ttk.Button(self,text="Bottom").pack(fill='y', side='left')
+        ttk.Button(self,text="Bottom").pack(fill='y', side="right")
         
       
 if __name__ == '__main__':
