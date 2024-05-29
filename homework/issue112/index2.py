@@ -6,9 +6,9 @@ class Window(tk.Tk):
         super().__init__(**kwargs) #呼叫父類別
         #多做一些事
         self.title("pack1")  #參數
-        self.geometry("300x200")  #
+        self.geometry("300x200")  #視窗大小
 
-        ttk.Button(self,text="Top").pack(fill='y', side='left') #fill="x"滿寬
+        ttk.Button(self,text="Top").pack(fill='y', side='left') 
 
         ttk.Button(self,text="Middle").pack(fill="x")
         
