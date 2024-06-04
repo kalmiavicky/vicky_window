@@ -35,19 +35,22 @@ class Window(ThemedTk):
 
     def click3(self):
         messagebox.showwarning("Warning","Warning message")
-
-       
+    
     def click4(self):
         ShowInfo(parent=self,title="這是Dialog")
 
 class ShowInfo(Dialog):
     def __init__(self,**kwargs):
         super().__init__(**kwargs)
-
+    
     def body(self, master):
-        tk.Text(self,height=8).pack(padx=10,pady=10)
-        
+        text = tk.Text(self,height=8,font=('Helvetica',25),width=40)
+        text.pack(padx=10,pady=10)
+        text.insert(tk.INSERT,"測試的文字")
+        text.config(state='disabled')
         return None
+
+
 
 def main():
     '''
