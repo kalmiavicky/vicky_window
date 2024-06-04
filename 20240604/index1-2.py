@@ -4,6 +4,7 @@ from tkinter import ttk
 from ttkthemes import ThemedTk
 import tools
 from tkinter import messagebox
+from tkinter.simpledialog import Dialog
 
 class Window(ThemedTk):
     def __init__(self,**kwargs):
@@ -34,12 +35,19 @@ class Window(ThemedTk):
 
     def click3(self):
         messagebox.showwarning("Warning","Warning message")
-    
+
+       
     def click4(self):
-        answer:bool = messagebox.askyesno("還要嗎?")
-        print(answer)
+        ShowInfo(parent=self,title="這是Dialog")
 
+class ShowInfo(Dialog):
+    def __init__(self,**kwargs):
+        super().__init__(**kwargs)
 
+    def body(self, master):
+        tk.Text(self,height=8).pack(padx=10,pady=10)
+        
+        return None
 
 def main():
     '''
