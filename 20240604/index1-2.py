@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from ttkthemes import ThemedTk
 import tools
+from tkinter import messagebox
 
 class Window(ThemedTk):
     def __init__(self,**kwargs):
@@ -12,34 +13,32 @@ class Window(ThemedTk):
         #定義style的名稱
         style = ttk.Style()
         style.configure('Top.TFrame')
-        # style.configure('Top.TFrame',background='#BEC23F')  #background文字背景色
-
-        style.configure('Top.TLabel',font=('Helvetica',25,"bold"))
+        style.configure('Top.TLabel',font=('Helvetica',25,'bold'))
 
         title_frame = ttk.Frame(self,style='Top.TFrame',borderwidth=2,relief='groove')
         ttk.Label(title_frame,text='全台空氣品質指標(AQI)',style='Top.TLabel').pack(expand=True,fill='y')
-        title_frame.pack(ipadx=100,ipady=30,padx=10,pady=10) #內容框
+        title_frame.pack(ipadx=100,ipady=30,padx=10,pady=10)
 
         func_frame = ttk.Frame(self,style='Top.TFrame',borderwidth=1,relief='groove')
-        ttk.Button(func_frame,text="AQI品質最好的5個",command=self.click1).pack(side='left',expand=True,ipadx=10,ipady=10)
+        ttk.Button(func_frame,text="AQI品質最好的5個",command=self.click1).pack(side='left',expand=True)
         ttk.Button(func_frame,text="AQI品質最差的5個",command=self.click2).pack(side='left',expand=True)
         ttk.Button(func_frame,text="pm2.5品質最好的5個",command=self.click3).pack(side='left',expand=True)
         ttk.Button(func_frame,text="pm2.5品質最好的5個",command=self.click4).pack(side='left',expand=True)
         func_frame.pack(ipadx=100,ipady=30,padx=10,pady=10)
 
     def click1(self):
-        print("click1")
+        messagebox.showinfo("information","Infomative message")
     
     def click2(self):
-        print("click2")
+        messagebox.showerror("Error","Error message")
 
     def click3(self):
-        print("click3")
+        messagebox.showwarning("Warning","Warning message")
     
     def click4(self):
-        print("click4")
+        answer:bool = messagebox.askyesno("還要嗎?")
+        print(answer)
 
-       
 
 
 def main():
@@ -52,7 +51,7 @@ def main():
         data:list[dict] = tools.get_data(all_data)
         pprint(data)
     '''
-    window = Window(theme="kroc")
+    window = Window(theme="arc")
     window.mainloop()
     
 
