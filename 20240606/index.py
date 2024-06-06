@@ -52,9 +52,14 @@ class Window(ThemedTk):
         data:list[dict] = tools.AQI.aqi_records
         sorted_data:list[dict] = sorted(data,key=lambda value:value['aqi'])
         best_aqi:list[dict] = sorted_data[:5]
-        print(best_aqi)
-              
-            
+        
+        def abc(value:dict)->str:
+            return f"{value['county']} - {value['site_name']} - aqi:{value['aqi']} - 狀態:{value['status']} - {value['date']}"    
+        message_data:list[str] = list(map(abc,best_aqi))
+        message="\n".join(message_data)
+        print(message)
+        ShowInfo(parent=self,title="這是全台aqi最佳前5個區域")
+    
     
     def click2(self):
         self.update_data()
@@ -81,6 +86,7 @@ class ShowInfo(Dialog):
     
     def apply(self) -> None:
         '''
+        當用戶按下確定時處理數據
         使用者按下內建的ok button,會執行的內容
         '''
         print("使用者按下ok了")
