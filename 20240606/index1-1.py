@@ -5,7 +5,6 @@ from ttkthemes import ThemedTk
 import tools
 from tkinter import messagebox
 from tkinter.simpledialog import Dialog
-from datetime import datetime
 
 class Window(ThemedTk):
     def __init__(self,**kwargs):
@@ -45,31 +44,14 @@ class Window(ThemedTk):
         else:                       
             data:list[dict] = tools.get_data(all_data)
             return  data
-        
-        
             
-     
+            
                      
             
 
     def click1(self):
-        if(tools.AQI.aqi_records is None) or (tools.AQI.update_time is None):
-           tools.AQI.aqi_records = self.dowload_parse_data()
-           tools.AQI.update_time = datetime.now()
-           
-        #    print("下載")
-        elif ((datetime.now()-tools.AQI.update_time).seconds >= 60*60 ):
-            tools.AQI.aqi_records = self.dowload_parse_data()
-            tools.AQI.update_time = datetime.now()
-            # print("下載")
-
-
-
-        data:list[dict] = tools.AQI.aqi_records
-        sorted_data:list[dict]=sorted(data,key=lambda value:["aqi"]) #sorted排序 value指定名稱
-        best_aqi:list[dict]=sorted_data[:5]  #sorted_data[:5]切割前5個
-        print(best_aqi)
-        
+        data:list[dict] = self.dowload_parse_data()
+        print(data)   #傳出資料
 
     def click2(self):
         messagebox.showerror("Error","Error message")
