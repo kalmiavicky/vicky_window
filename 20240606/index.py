@@ -61,19 +61,49 @@ class Window(ThemedTk):
         ShowInfo(parent=self,title="這是全台aqi最佳前5個區域",message=message)
     
     
-    def click2(self):
+    
+    def click2(self):   
         self.update_data()
+        data:list[dict] = tools.AQI.aqi_records
+        sorted_data:list[dict] = sorted(data,key=lambda value:value['aqi'],reverse=True)
+        best_aqi:list[dict] = sorted_data[:5]
+        
+        def abc(value:dict)->str:
+            return f"{value['county']} - {value['site_name']} - aqi:{value['aqi']} - 狀態:{value['status']} - {value['date']}"    
+        message_data:list[str] = list(map(abc,best_aqi))
+        message="\n".join(message_data)
+        print(message)
+        ShowInfo(parent=self,title="這是全台aqi最u差前5個區域",message=message)
         
 
     def click3(self):
         self.update_data()
-        messagebox.showwarning("Warning","Warning message")
+        data:list[dict] = tools.AQI.aqi_records
+        sorted_data:list[dict] = sorted(data,key=lambda value:value['pm25'])
+        best_aqi:list[dict] = sorted_data[:5]
+        
+        def abc(value:dict)->str:
+            return f"{value['county']} - {value['site_name']} - pm2.5:{value['pm25']} - 狀態:{value['status']} - {value['date']}"    
+        message_data:list[str] = list(map(abc,best_aqi))
+        message="\n".join(message_data)
+        print(message)
+        ShowInfo(parent=self,title="這是pm2.5最佳前5個區域",message=message)
+    
     
     def click4(self):        
-        ShowInfo(parent=self,title="這是Dialog")
+        self.update_data()
+        data:list[dict] = tools.AQI.aqi_records
+        sorted_data:list[dict] = sorted(data,key=lambda value:value['pm25'],reverse=True)
+        best_aqi:list[dict] = sorted_data[:5]
+        def abc(value:dict)->str:
+            return f"{value['county']} - {value['site_name']} - pm2.5:{value['pm25']} - 狀態:{value['status']} - {value['date']}"
+        message_data:list[str] = list(map(abc,best_aqi))
+        message = "\n".join(message_data)
+        print(message)
+        ShowInfo(parent=self,title="全台pm2.5最差5個區域",message=message)
 
 class ShowInfo(Dialog):
-    def __init__(self,parent:Misc,title:str|None = None,message:str=""):
+    def __init__(self,parent:Misc,title:str|None = None,message:str=""): #---
         self.message = message  #這串要先執行
 
         super().__init__(parent=parent,title=title)
@@ -84,7 +114,7 @@ class ShowInfo(Dialog):
     def body(self, master: Frame) -> Misc | None:                      #---
         text = tk.Text(self,height=8,font=('Helvetica',15),width=50)
         text.pack(padx=10,pady=10)
-        text.insert(tk.INSERT,self.message)
+        text.insert(tk.INSERT,self.message)                             #---
         text.config(state='disabled')
         return None
     
