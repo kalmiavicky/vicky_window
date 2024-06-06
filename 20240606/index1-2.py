@@ -1,6 +1,6 @@
 from pprint import pprint
 import tkinter as tk
-from tkinter import ttk,Misc,Frame,Event
+from tkinter import ttk
 from ttkthemes import ThemedTk
 import tools
 from tkinter import messagebox
@@ -37,7 +37,15 @@ class Window(ThemedTk):
         else:        
             data:list[dict] = tools.get_data(all_data)
             return data
-                  
+        
+        # else:                       
+        #     data:list[dict] = tools.get_data(all_data)
+        #     pprint(data)
+        #     messagebox.showwarning("出現錯誤","出現小錯誤,請稍後再試!") ##多一個小視窗
+        #     return  
+              
+
+
 
     def update_data(self):
         if (tools.AQI.aqi_records is None) or (tools.AQI.update_time is None):
@@ -50,56 +58,34 @@ class Window(ThemedTk):
     def click1(self):
         self.update_data()
         data:list[dict] = tools.AQI.aqi_records
-        sorted_data:list[dict] = sorted(data,key=lambda value:value['aqi'])
-        best_aqi:list[dict] = sorted_data[:5]
+        sorted_data:list[dict] = sorted(data,key=lambda value:value['aqi'])  #sorted排序 value指定名稱
+        best_aqi:list[dict] = sorted_data[:5]   #sorted_data[:5]切割前5個
         print(best_aqi)
               
             
     
     def click2(self):
         self.update_data()
-        
+        messagebox.showerror("Error","Error message")
 
     def click3(self):
         self.update_data()
         messagebox.showwarning("Warning","Warning message")
     
-    def click4(self):        
+    def click4(self):
+        self.update_data()
         ShowInfo(parent=self,title="這是Dialog")
 
 class ShowInfo(Dialog):
-    def __init__(self,parent:Misc,title:str|None = None):
-        super().__init__(parent=parent,title=title)
-
+    def __init__(self,**kwargs):
+        super().__init__(**kwargs)
     
-    def body(self, master: Frame) -> Misc | None:                      #---
+    def body(self, master):
         text = tk.Text(self,height=8,font=('Helvetica',25),width=40)
         text.pack(padx=10,pady=10)
         text.insert(tk.INSERT,"測試的文字")
         text.config(state='disabled')
         return None
-    
-    def apply(self) -> None:
-        '''
-        使用者按下內建的ok button,會執行的內容
-        '''
-        print("使用者按下ok了")
-
-    def buttonbox(self) -> None:
-        '''
-        自訂button
-        '''
-        box = tk.Frame(self)
-        self.ok_button = tk.Button(box, text="確定", width=10, command=self.ok, default=tk.ACTIVE)
-        self.ok_button.pack(pady=(20,30),ipady=10)    #按妞--pady=(20,30)邊距 ipady=10 內距
-        box.pack()
-
-    def ok(self) -> None:
-        print("OK button was clicked!")       
-        super().ok()
-    
-
-    
 
 
 
