@@ -65,7 +65,7 @@ class Window(ThemedTk):
     def click2(self):   
         self.update_data()
         data:list[dict] = tools.AQI.aqi_records
-        sorted_data:list[dict] = sorted(data,key=lambda value:value['aqi'],reverse=True)
+        sorted_data:list[dict] = sorted(data,key=lambda value:value['aqi'],reverse=True) #--
         best_aqi:list[dict] = sorted_data[:5]
         
         def abc(value:dict)->str:
