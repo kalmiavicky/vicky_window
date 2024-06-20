@@ -16,7 +16,7 @@ class BMIApp(tk.Tk):
         ttk.Label(self, text="體重 (公斤):", background='#FCE2FE', foreground='#A867DD', font=('微軟正黑體', 12)).grid(row=2, column=0, padx=10, pady=5)
         
 
-        self.name_entry = ttk.Entry(self)
+        self.name_entry = ttk.Entry(self)  #Entry 單行輸入框
         self.height_entry = ttk.Entry(self)
         self.weight_entry = ttk.Entry(self)
 
@@ -24,7 +24,7 @@ class BMIApp(tk.Tk):
         self.height_entry.grid(row=1, column=1, padx=10, pady=5)
         self.weight_entry.grid(row=2, column=1, padx=10, pady=5)
 
-        # 创建计算按钮
+        # 创建计算按钮  button按钮
         self.calc_button = tk.Button(self, text="計 算 B M I", command=self.calculate_bmi, font=('微軟正黑體', 14), bg='#FCE2FE', fg='#A867DD')
         self.calc_button.grid(row=3, column=0, columnspan=2, pady=10,ipadx=50,ipady=10)
        
