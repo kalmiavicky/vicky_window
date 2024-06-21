@@ -10,7 +10,7 @@ import io
 from PIL import Image, ImageTk
 import webbrowser
 
-API_KEY = 'AIzaSyBzMGENbUBC-nKRTkKz78WVATWTCoEf9Mk'
+API_KEY = 'AI'
 gmaps = googlemaps.Client(key=API_KEY)
 
 # 每頁呈現的結果數量

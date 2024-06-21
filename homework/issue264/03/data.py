@@ -3,7 +3,7 @@ from requests import Response
 from pydantic import BaseModel, Field
 import webbrowser
 
-API_KEY = 'AIzaSyBzMGENbUBC-nKRTkKz78WVATWTCoEf9Mk'  # 請替換為您的Google Maps API Key
+API_KEY = 'AI'  # 請替換為您的Google Maps API Key
 
 # 定義下載 Google 地圖美食搜尋資料的函數
 def __download_json(query):

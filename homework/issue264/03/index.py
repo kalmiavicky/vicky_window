@@ -4,7 +4,7 @@ from tkinter import ttk, messagebox
 import googlemaps
 from tools import CustomMessagebox
 
-API_KEY = 'AIzaSyBzMGENbUBC-nKRTkKz78WVATWTCoEf9Mk'  # 請替換為您的Google Maps API Key
+API_KEY = 'AI'  # 請替換為您的Google Maps API Key
 
 # Window 類別的初始化：初始化主視窗，設定標題和Google Maps客戶端
 class Window(ThemedTk):
