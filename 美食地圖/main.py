@@ -10,7 +10,7 @@ import io
 from PIL import Image, ImageTk
 import webbrowser
 
-API_KEY = 'AIzaSyCJxyreN2bQmxOgYTLL-BqcAVXNnA714jY'
+API_KEY = 'AIzaSyBzMGENbUBC-nKRTkKz78WVATWTCoEf9Mk'
 gmaps = googlemaps.Client(key=API_KEY)
 
 # 每頁呈現的結果數量
@@ -33,6 +33,7 @@ def search():
     
     area = entry.get()
     results = search_places(area)
+    print(results)
     start = 0
     page = 0
     total_pages = (len(results) - 1) // display_count + 1

@@ -2,7 +2,7 @@ import tkinter as tk
 import googlemaps
 import webbrowser
 
-API_KEY = 'AIzaSyCJxyreN2bQmxOgYTLL-BqcAVXNnA714jY'
+API_KEY = 'AIzaSyBzMGENbUBC-nKRTkKz78WVATWTCoEf9Mk'
 gmaps = googlemaps.Client(key=API_KEY)
 
 def search_places(area, rating=None):
