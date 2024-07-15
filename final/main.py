@@ -15,3 +15,5 @@ def index():
     #detail_snaes -> 該行政區所有站點資訊   
     return render_template('index.html.jinja',areas=areas,show_area=selected_area,detail_snaes=detail_snaes)    
     
+    
+    
