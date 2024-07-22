@@ -1,3 +1,9 @@
+#(venv1) C:\Users\user\Documents\vicky_window\20240722>python callback2.py
+#http://127.0.0.1:8050/ 
+#crtl+c 離開
+
+
+
 from dash import Dash,html,dcc,Input,Output,callback
 import pandas as pd
 import plotly.express as px
