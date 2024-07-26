@@ -5,3 +5,5 @@ tkintermapview
 matplotlib
 numpy
 pandas
+psycopg2-binary
+python-dotenv
