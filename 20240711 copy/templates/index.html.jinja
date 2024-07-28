@@ -1,0 +1,87 @@
+{% extends 'base.html.jinja' %}
+
+{% block title %}
+{{ super() }} - 首頁
+{% endblock %}
+
+{% block head %}
+{{ super() }}
+<style type="text/css">
+  body {
+    background-color: white; /* 設定背景顏色為白色 */
+    font-size: 18px; /* 設定整體字體大小 */
+    margin: 20px; /* 設定整體邊距 */
+  }
+  .container {
+    margin-top: 20px; /* 設定容器上邊距 */
+  }
+  .form-check {
+    margin-bottom: 10px; /* 設定表單檢查框下邊距 */
+  }
+  table {
+    margin-top: 20px; /* 設定表格上邊距 */
+  }
+</style>
+{% endblock %}
+
+{% block main %}
+<div class="container text-center">
+  <div class="row">
+    <div class="col-2" style="background-color:beige">
+      <!-- 表單開始 -->
+      <form action="{{url_for('index')}}" method="get">
+        {% for area in areas %}
+        <div class="form-check">
+          <!-- 複選框 -->
+          <input class="form-check-input" type="checkbox" name="area" value="{{area}}" id="area{{loop.index}}" 
+          {% if area in selected_areas %}checked{% endif %}>
+          <label class="form-check-label" for="area{{loop.index}}">
+            {{area}}
+          </label>
+        </div>
+        {% endfor %}
+        <!-- 提交按鈕 -->
+        <button type="submit" class="btn btn-primary mt-2">送出</button>
+      </form>
+    </div>
+    <div class="col-10">
+      <!-- 顯示所選區域名稱 -->
+      <h3 style="text-align:left;margin-top:0.5em">
+        {% for area in selected_areas %}
+          {{area}}{% if not loop.last %}, {% endif %}
+        {% endfor %}
+      </h3>
+      <!-- 表格顯示數據 -->
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">站點</th>
+            <th scope="col">總車輛數</th>
+            <th scope="col">可借</th>
+            <th scope="col">可還</th>
+            <th scope="col">時間</th>
+            <th scope="col">狀態</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for sna in detail_snaes %}
+          <tr>
+            <th scope="row">{{sna[0]}}</th>
+            <td>{{sna[1]}}</td>
+            <td>{{sna[2]}}</td>
+            <td>{{sna[3]}}</td>
+            <td>{{sna[4]}}</td>
+            <!-- 顯示狀態 -->
+            {% if sna[5] %}
+            <td>營業中</td>
+            {% else %}
+            <td>維修中</td>
+            {% endif %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
