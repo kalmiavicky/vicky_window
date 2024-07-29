@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-tw">
+
+<head>
+  {% block head%}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="{{url_for('static',filename='style/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{url_for('static',filename='style/my.css')}}" rel="stylesheet">
+  <script src="{{url_for('static',filename='js/bootstrap.min.js')}}"></script>
+  <title>{% block title%}機器學習芒果分析{% endblock%}</title>
+  {% endblock %}
+</head>
+
+<body>
+  <div class="container-md">
+    <nav class="navbar navbar-expand-md bg-body-tertiary">
+      <div class="container-fluid">
+        <h1 class="navbar-brand" href="{{url_for('index')}}">機器學習芒果分析</h1>
+        
+       
+      </div>
+    </nav>
+    <main>
+    {% block main%}
+    {% endblock %}
+    </main>    
+  </div>
+</body>
+
+</html>
