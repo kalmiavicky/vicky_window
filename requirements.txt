@@ -10,6 +10,7 @@ python-dotenv
 dash
 flask
 gunicorn
+Flask-WTF
 
 
 
