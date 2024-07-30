@@ -1,10 +1,10 @@
 {% extends "base.html.jinja" %}
+{% block title%}
+錯誤訊息
+{% endblock %}
 
-{% block title %}錯誤訊息{% endblock %}
-
-    {% block main%}
-    <div class="alert alert-danger" role="alert">
-        沒有此頁面
-    </div>
-   
-    {% endblock %}
+{% block main%}
+<div class="alert alert-danger" role="alert">
+  網頁發生錯誤
+</div>
+{% endblock %}
