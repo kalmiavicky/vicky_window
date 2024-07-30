@@ -16,8 +16,8 @@ app2.layout = html.Div([
     html.Hr(),
     dash_table.DataTable(id='sites_table')
 ])
-
-@callback(
+#如果要連結2個網頁前面要加上app2.
+@app2.callback(
     Output('sites_table','data'),
     Input('areas','value')
 )

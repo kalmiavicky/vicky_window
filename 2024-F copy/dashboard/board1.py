@@ -47,8 +47,8 @@ app1.layout = html.Div([
     )
 
 ])
-#如果要連結2個網頁前面要加上app1.
-@app1.callback(
+
+@callback(
     Output('indicator-graphic','figure'),
     Input('xaxis-column','value'),
     Input('yaxis-column','value'),
