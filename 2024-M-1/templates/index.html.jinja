@@ -1,108 +1,17 @@
 <!-- index.html.jinja -->
-{% extends 'base.html.jinja' %}
-
-{% block head %}
-{{ super() }}
-<style type="text/css">
-  .sidebar {
-    background-color: beige;
-    padding: 15px;
-    height: 100%;
-  }
-
-  .form-check {
-    text-align: left;
-    margin-bottom: 10px;
-  }
-
-  .chart-label {
-    font-weight: bold;
-    margin-top: 10px;
-    margin-bottom: 5px;
-    text-align: left;
-  }
-
-  h4 {
-    text-align: left;
-    margin-bottom: 15px;
-  }
-
-  .btn-primary {
-    display: block;
-    width: 100%;
-    margin-top: 15px;
-  }
-
-  .main-content {
-    padding-left: 30px;
-  }
-
-  .table {
-    width: 100%;
-    margin-top: 20px;
-  }
-</style>
-{% endblock %}
-
-{% block main %}
-<div class="row">
-  <div class="col-3 sidebar">
-    <!-- 表單開始 -->
-    <form action="{{ url_for('index') }}" method="get">
-      <h4>芒果品種/市場</h4>
-      {% for area in areas %}
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" name="area" value="{{ area }}" id="area{{ loop.index }}" {% if
-          area in selected_areas %}checked{% endif %}>
-        <label class="form-check-label" for="area{{ loop.index }}">
-          {{ area }}
-        </label>
-      </div>
-      {% if area == '芒果金煌 台北二' %}
-      <div class="chart-label"><h4>圖表</h4></div>
-      {% endif %}
-      {% endfor %}
-      <button type="submit" class="btn btn-primary">送出</button>
-    </form>
-  </div>
-  <div class="col-9 main-content">
-    {% if detail_snaes %}
-    <h3>{{ selected_areas|join(', ') }}</h3>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>站點</th>
-          <th>總車輛數</th>
-          <th>可借</th>
-          <th>可還</th>
-          <th>時間</th>
-          <th>狀態</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for sna in detail_snaes %}
-        <tr>
-          <td>{{ sna[0] }}</td>
-          <td>{{ sna[1] }}</td>
-          <td>{{ sna[2] }}</td>
-          <td>{{ sna[3] }}</td>
-          <td>{{ sna[4] }}</td>
-          <td>{% if sna[5] %}營業中{% else %}維修中{% endif %}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    {% elif '常態分析圖' in selected_areas %}
-    <div class="chart-container">
-      <iframe src="{{ url_for('dashboard.app1') }}" style="width:100%; height:800px; border:none;"></iframe>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>機器學習芒果分析</title>
+    {% for css in external_stylesheets %}
+    <link rel="stylesheet" href="{{ css }}">
+    {% endfor %}
+</head>
+<body>
+    <div id="app">
+        {% block content %}
+        {% endblock %}
     </div>
-    {% elif '盒鬚圖' in selected_areas %}
-    <div class="chart-container">
-      <iframe src="{{ url_for('dashboard.boxplot') }}" style="width:100%; height:800px; border:none;"></iframe>
-    </div>
-    {% else %}
-    <p>請選擇一個或多個區域以查看數據。</p>
-    {% endif %}
-  </div>
-</div>
-{% endblock %}
+    <script src="{{ assets_url }}/index.js"></script>
+</body>
+</html>
