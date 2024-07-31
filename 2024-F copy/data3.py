@@ -6,7 +6,7 @@ import plotly.express as px
 dash_app = Dash(__name__)
 
 # 加载数据
-df = pd.read_csv('2024-F copy\芒果 金煌北一.csv')
+df = pd.read_csv('2024-F copy\ME1.csv')
 
    # 這裡可以添加數據處理和圖表生成的邏輯
     figure = {
