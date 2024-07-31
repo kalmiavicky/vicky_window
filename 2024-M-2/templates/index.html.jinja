@@ -1,0 +1,17 @@
+<!-- index.html.jinja -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>機器學習芒果分析</title>
+    {% for css in external_stylesheets %}
+    <link rel="stylesheet" href="{{ css }}">
+    {% endfor %}
+</head>
+<body>
+    <div id="app">
+        {% block content %}
+        {% endblock %}
+    </div>
+    <script src="{{ assets_url }}/index.js"></script>
+</body>
+</html>

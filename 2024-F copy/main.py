@@ -12,7 +12,7 @@ import data
 app = Flask(__name__)
 
 # 讀取 CSV 文件
-csv_path = r'C:\Users\user\Documents\vicky_window\2024-F copy\mangodata\MangoIrwin-2.csv'
+csv_path = r'C:\Users\win\Documents\vicky_window\2024-F copy\mangodata\MangoIrwin-2.csv'
 df = pd.read_csv(csv_path)
 
 area_mapping = {
