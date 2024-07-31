@@ -9,3 +9,6 @@ psycopg2-binary
 python-dotenv
 flask
 gunicorn
+dash
+flask
+dash-bootstrap-components
