@@ -1,4 +1,3 @@
-<!-- index.html.jinja -->
 {% extends 'base.html.jinja' %}
 {% block head %}
 {{ super() }}
@@ -40,8 +39,15 @@
     width: 100%;
     margin-top: 20px;
   }
+
+  .chart-container {
+    margin-top: 20px;
+  }
 </style>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 {% endblock %}
+
 {% block main %}
 <div class="row">
   <div class="col-3 sidebar">
@@ -67,8 +73,25 @@
   </div>
   <div class="col-9 main-content">
     {% if '芒果金煌 台北一' in selected_areas %}
+    <h3>芒果金煌 台北一</h3>
+    <div>
+      <label for="start-date">開始日期：</label>
+      <input type="date" id="start-date">
+      <label for="end-date">結束日期：</label>
+      <input type="date" id="end-date">
+      <button onclick="updateCharts()" class="btn btn-primary">更新圖表</button>
+    </div>
+    <div id="price-chart" class="chart-container"></div>
+    <div id="volume-chart" class="chart-container"></div>
+    {% elif '芒果金煌 台北二' in selected_areas or '常態分析圖' in selected_areas or '盒鬚圖' in selected_areas %}
     <div class="chart-container">
+      {% if '芒果金煌 台北二' in selected_areas %}
       <iframe src="{{ url_for('dashboard.mango_jinhuang') }}" style="width:100%; height:800px; border:none;"></iframe>
+      {% elif '常態分析圖' in selected_areas %}
+      <iframe src="{{ url_for('dashboard.app1') }}" style="width:100%; height:800px; border:none;"></iframe>
+      {% elif '盒鬚圖' in selected_areas %}
+      <iframe src="{{ url_for('dashboard.boxplot') }}" style="width:100%; height:800px; border:none;"></iframe>
+      {% endif %}
     </div>
     {% elif detail_snaes %}
     <h3>{{ selected_areas|join(', ') }}</h3>
@@ -96,17 +119,31 @@
         {% endfor %}
       </tbody>
     </table>
-    {% elif '常態分析圖' in selected_areas %}
-    <div class="chart-container">
-      <iframe src="{{ url_for('dashboard.app1') }}" style="width:100%; height:800px; border:none;"></iframe>
-    </div>
-    {% elif '盒鬚圖' in selected_areas %}
-    <div class="chart-container">
-      <iframe src="{{ url_for('dashboard.boxplot') }}" style="width:100%; height:800px; border:none;"></iframe>
-    </div>
     {% else %}
     <p>請選擇一個或多個區域以查看數據。</p>
     {% endif %}
   </div>
 </div>
+
+<script>
+  function updateCharts() {
+    var startDate = document.getElementById('start-date').value;
+    var endDate = document.getElementById('end-date').value;
+
+    $.getJSON('/mango_jinhuang_data', {
+      start_date: startDate,
+      end_date: endDate
+    }, function (data) {
+      Plotly.newPlot('price-chart', data.price_chart.data, data.price_chart.layout);
+      Plotly.newPlot('volume-chart', data.volume_chart.data, data.volume_chart.layout);
+    });
+  }
+
+  // 初始加載圖表
+  $(document).ready(function () {
+    if (document.getElementById('price-chart')) {
+      updateCharts();
+    }
+  });
+</script>
 {% endblock %}

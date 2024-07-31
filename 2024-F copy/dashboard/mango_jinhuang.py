@@ -9,8 +9,10 @@ import os
 # 打印當前工作目錄
 print("當前工作目錄:", os.getcwd())
 
+
+
 # 使用正斜線的路徑
-csv_path = r'C:/Users/user/Documents/vicky_window/2024-F copy/ME1.csv'
+csv_path = r'C:\Users\user\Documents\vicky_window\2024-F copy\mangodata\MangoIrwin-2.csv'
 print("嘗試讀取的文件路徑:", csv_path)
 
 # 檢查文件是否存在
