@@ -51,7 +51,7 @@ def process_mango_data(file_path, market):
 def load_data(market):
     try:
         # 資料路徑（請根據實際情況修改）
-        file_path = r'C:\Users\win\Documents\vicky_window\2024-M-1\mangodata\MangoIrwin.csv'
+        file_path = r'C:\Users\user\Documents\vicky_window\2024-M-2\mangodata\MangoIrwin.csv'
         
         # 使用數據處理函數
         df = process_mango_data(file_path, market)

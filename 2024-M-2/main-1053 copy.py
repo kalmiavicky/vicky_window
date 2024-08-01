@@ -4,6 +4,7 @@ from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 import pandas as pd
 import plotly.graph_objs as go
+import plotly.express as px
 from flask import Flask
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -86,6 +87,31 @@ def generate_distribution_plot(df, column='平均價(元/公斤)'):
         print(f"生成分布圖時發生錯誤：{e}")
         return None
 
+# 創建箱型圖的函數
+def create_box_plot(df, column='平均價(元/公斤)'):
+    """
+    創建箱型圖的函數
+
+    參數:
+    df (pandas.DataFrame): 包含數據的 DataFrame
+    column (str): 用於創建箱型圖的列名
+
+    返回:
+    plotly.graph_objs._figure.Figure: Plotly 圖形對象
+    """
+    try:
+        fig = px.box(df, y=column, title=f'{column}箱型圖')
+        fig.update_layout(
+            yaxis_title=column,
+            xaxis_title='',
+            showlegend=False,
+            height=400
+        )
+        return fig
+    except Exception as e:
+        print(f"創建箱型圖時發生錯誤：{e}")
+        return None
+
 # 創建數據表格
 def create_data_table(df, market):
     if df is None:
@@ -163,7 +189,7 @@ def create_block_group(market):
         html.Div([
             create_data_block(f"{market} 平均價格資料", f"{market}-average-price"),
             create_data_block(f"{market} 箱型圖", f"{market}-box-plot"),
-            create_data_block(f"{market} 常態部署", f"{market}-normal-distribution"),
+            create_data_block(f"{market} 常態分布", f"{market}-normal-distribution"),
         ], style={'display': 'flex', 'flexWrap': 'wrap', 'justifyContent': 'space-around'}),
         html.Div([
             create_data_block(f"{market} 四分位數距數據", f"{market}-quartile-data"),
@@ -208,21 +234,68 @@ def create_layout():
 
 app.layout = create_layout()
 
+# MT1-1 平均價資料處理函數
+def process_average_price(df):
+    """
+    處理平均價資料的函數
+    
+    參數:
+    df (pandas.DataFrame): 包含原始數據的DataFrame
+    
+    返回:
+    pandas.DataFrame: 處理後的平均價資料
+    """
+    try:
+        # 提取平均價格列
+        price = df['平均價(元/公斤)']
+        
+        # 特徵欄位: 平均價(元/公斤)
+        anal_data = pd.DataFrame(price, columns=['平均價(元/公斤)'])
+        
+        # 計算基本統計資訊
+        stats = anal_data['平均價(元/公斤)'].describe()
+        
+        # 創建一個新的DataFrame來存儲統計資訊
+        stats_df = pd.DataFrame({
+            '統計量': stats.index,
+            '值': stats.values
+        })
+        
+        return stats_df
+    except Exception as e:
+        print(f"處理平均價資料時發生錯誤：{e}")
+        return None
+
 # 更新回調函數
 @app.callback(
-    Output('台北二-normal-distribution', 'children'),
+    [Output('台北二-normal-distribution', 'children'),
+     Output('台北二-box-plot', 'children'),
+     Output('台北二-average-price', 'children')],  # 新增這行
     Input('url', 'pathname')
 )
-def update_taipei_mk2_distribution(pathname):
+def update_taipei_mk2_plots(pathname):
     if pathname == '/taipei_mk2_irwin':
         df = load_data('台北二')
         if df is not None:
-            img_src = generate_distribution_plot(df)
-            if img_src:
-                return html.Img(src=img_src, style={'width': '100%'})
-            else:
-                return html.P("無法生成分布圖", style={'textAlign': 'center', 'color': 'red'})
-    return html.P("數據未加載", style={'textAlign': 'center', 'color': 'gray'})
+            # 常態分布圖
+            dist_img_src = generate_distribution_plot(df)
+            dist_img = html.Img(src=dist_img_src, style={'width': '100%'}) if dist_img_src else html.P("無法生成分布圖", style={'textAlign': 'center', 'color': 'red'})
+            
+            # 箱型圖
+            box_plot = create_box_plot(df)
+            box_plot_div = dcc.Graph(figure=box_plot) if box_plot is not None else html.P("無法生成箱型圖", style={'textAlign': 'center', 'color': 'red'})
+            
+            # 平均價資料
+            avg_price_data = process_average_price(df)
+            avg_price_table = dash_table.DataTable(
+                data=avg_price_data.to_dict('records'),
+                columns=[{"name": i, "id": i} for i in avg_price_data.columns],
+                style_cell={'textAlign': 'left'},
+                style_header={'fontWeight': 'bold'}
+            ) if avg_price_data is not None else html.P("無法處理平均價資料", style={'textAlign': 'center', 'color': 'red'})
+            
+            return dist_img, box_plot_div, avg_price_table
+    return html.P("數據未加載", style={'textAlign': 'center', 'color': 'gray'}), html.P("數據未加載", style={'textAlign': 'center', 'color': 'gray'}), html.P("數據未加載", style={'textAlign': 'center', 'color': 'gray'})
 
 @app.callback(Output('page-content', 'children'),
               Input('url', 'pathname'))
@@ -242,6 +315,18 @@ def display_page(pathname):
         ])
     elif pathname == '/':
         return html.Div(html.H3("歡迎來到機器學習芒果分析系統", style={'textAlign': 'center', 'fontSize': '20px'}))
+    elif pathname == '/taipei_mk1_chiinhwang':
+        df = load_data('台北一')  # 注意：這裡可能需要修改數據加載邏輯以適應金煌芒果
+        return html.Div([
+            create_data_table(df, '台北一金煌'),
+            create_block_group('台北一金煌')
+        ])
+    elif pathname == '/taipei_mk2_chiinhwang':
+        df = load_data('台北二')  # 注意：這裡可能需要修改數據加載邏輯以適應金煌芒果
+        return html.Div([
+            create_data_table(df, '台北二金煌'),
+            create_block_group('台北二金煌')
+        ])
     else:
         return html.Div(html.H3("404 頁面未找到", style={'textAlign': 'center', 'fontSize': '20px'}))
 

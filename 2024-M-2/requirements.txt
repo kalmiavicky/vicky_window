@@ -10,3 +10,4 @@ python-dotenv
 flask
 gunicorn
 dash-bootstrap-components
+matplotlib
