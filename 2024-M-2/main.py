@@ -65,6 +65,50 @@ def load_data(market):
     except Exception as e:
         print(f"載入數據時發生錯誤：{e}")
         return None
+#四分位數距數據"
+
+# 計算四分位距 (IQR) 和邊界的函數
+def process_average_price(dataframe):
+    """
+    處理平均價格數據，計算四分位距 (IQR) 和邊界
+    
+    參數：
+    dataframe: pd.DataFrame，包含數據的 DataFrame
+    
+    回傳：
+    pd.DataFrame，包含 IQR 和邊界數據的 DataFrame
+    """
+    if dataframe.empty or '平均價(元/公斤)' not in dataframe.columns:
+        return None
+    
+    Q1 = dataframe['平均價(元/公斤)'].quantile(0.25)
+    Q3 = dataframe['平均價(元/公斤)'].quantile(0.75)
+    IQR = Q3 - Q1
+    Upper = Q3 + 1.5 * IQR
+    Lower = Q1 - 1.5 * IQR
+    
+    # 創建結果 DataFrame
+    result_df = pd.DataFrame({
+        '指標': ['四分位距 (IQR)', '上邊界 (天花板)', '下邊界 (地板)'],
+        '值': [IQR, Upper, Lower]
+    })
+    
+    return result_df
+# 範例使用
+if __name__ == "__main__":
+    # 設定數據檔案的路徑
+    file_path = 'data.csv'  # 請根據實際檔案位置修改路徑
+    
+    # 載入數據
+    anal_data = load_data(file_path)
+    
+    # 計算結果
+    results = calculate_iqr_bounds(anal_data, '平均價(元/公斤)')
+    
+    # 輸出結果
+    for key, value in results.items():
+        print(f"{key}: {value:.2f}")
+
 
 # 創建一個函數來生成常態分布圖
 def generate_distribution_plot(df, column='平均價(元/公斤)'):
@@ -111,6 +155,19 @@ def create_box_plot(df, column='平均價(元/公斤)'):
     except Exception as e:
         print(f"創建箱型圖時發生錯誤：{e}")
         return None
+    
+# 計算四分位距 (IQR) 和邊界的函數 
+def process_average_price(dataframe):
+    
+    if dataframe.empty or '平均價(元/公斤)' not in dataframe.columns:
+        return None
+    
+    Q1 = dataframe['平均價(元/公斤)'].quantile(0.25)
+    Q3 = dataframe['平均價(元/公斤)'].quantile(0.75)
+    IQR = Q3 - Q1
+    Upper = Q3 + 1.5 * IQR
+    Lower = Q1 - 1.5 * IQR  
+
 
 # 創建數據表格
 def create_data_table(df, market):
@@ -267,12 +324,6 @@ def process_average_price(df):
         return None
 
 # 更新回調函數
-@app.callback(
-    [Output('台北二-normal-distribution', 'children'),
-     Output('台北二-box-plot', 'children'),
-     Output('台北二-average-price', 'children')],  # 新增這行
-    Input('url', 'pathname')
-)
 def update_taipei_mk2_plots(pathname):
     if pathname == '/taipei_mk2_irwin':
         df = load_data('台北二')
@@ -293,9 +344,17 @@ def update_taipei_mk2_plots(pathname):
                 style_cell={'textAlign': 'left'},
                 style_header={'fontWeight': 'bold'}
             ) if avg_price_data is not None else html.P("無法處理平均價資料", style={'textAlign': 'center', 'color': 'red'})
-            
+
+            # 四分位數距數據
+            # (已經在 avg_price_table 中處理了四分位數距數據，這裡可不再重複處理)
+
             return dist_img, box_plot_div, avg_price_table
-    return html.P("數據未加載", style={'textAlign': 'center', 'color': 'gray'}), html.P("數據未加載", style={'textAlign': 'center', 'color': 'gray'}), html.P("數據未加載", style={'textAlign': 'center', 'color': 'gray'})
+        
+    return (
+        html.P("數據未加載", style={'textAlign': 'center', 'color': 'gray'}),
+        html.P("數據未加載", style={'textAlign': 'center', 'color': 'gray'}),
+        html.P("數據未加載", style={'textAlign': 'center', 'color': 'gray'})
+    )
 
 @app.callback(Output('page-content', 'children'),
               Input('url', 'pathname'))
