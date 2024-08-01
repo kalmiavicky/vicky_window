@@ -10,6 +10,11 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import io
 import base64
+import matplotlib.pyplot as plt
+from matplotlib import rcParams
+plt.title('SARIMA Model Time Series Analysis and Forecast', fontproperties='SimHei')  # 使用SimHei字型
+
+rcParams['font.family'] = 'Noto Sans'
 
 # 初始化 Flask 伺服器
 server = Flask(__name__)
@@ -167,6 +172,82 @@ def create_data_table(df, market):
         'boxShadow': '0 0 5px rgba(0,0,0,0.1)'
     })
 
+#SARIMA模型的時間序列分析與預測數據
+def train_and_predict_sarima(train, test, output_dir):
+    """
+    使用SARIMA模型進行時間序列預測，並評估模型表現。
+
+    參數:
+    train (pd.Series): 訓練資料集。
+    test (pd.Series): 測試資料集。
+    output_dir (str): 儲存模型結果圖表的目錄路徑。
+    """
+    from statsmodels.tsa.statespace.sarimax import SARIMAX
+    from sklearn.metrics import mean_squared_error, mean_absolute_error
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import os
+
+    # 建立和訓練SARIMA模型
+    # 設置季節性順序為(1, 1, 1, 180)，因為季節性是每年6個月（4到9月）
+    model = SARIMAX(train, order=(1, 1, 1), seasonal_order=(1, 1, 1, 180))
+    model_fit = model.fit(method='lbfgs', maxiter=200, disp=False)
+
+    # 預測訓練集和測試集
+    y_pred_train = model_fit.predict(start=train.index[0], end=train.index[-1], dynamic=False)
+    y_pred_test = model_fit.predict(start=test.index[0], end=test.index[-1], dynamic=False)
+
+    # 計算評估指標
+    mse_train = mean_squared_error(train, y_pred_train)
+    rmse_train = np.sqrt(mse_train)
+    mae_train = mean_absolute_error(train, y_pred_train)
+
+    mse_test = mean_squared_error(test, y_pred_test)
+    rmse_test = np.sqrt(mse_test)
+    mae_test = mean_absolute_error(test, y_pred_test)
+
+    # 四捨五入到小數點後四位
+    mse_train_rounded = round(mse_train, 4)
+    rmse_train_rounded = round(rmse_train, 4)
+    mae_train_rounded = round(mae_train, 4)
+
+    mse_test_rounded = round(mse_test, 4)
+    rmse_test_rounded = round(rmse_test, 4)
+    mae_test_rounded = round(mae_test, 4)
+
+    # 記錄評估指標
+    Training_MSE = f"Training MSE: {mse_train_rounded}"
+    Training_RMSE = f"Training RMSE: {rmse_train_rounded}"
+    Training_MAE = f"Training MAE: {mae_train_rounded}"
+    Testing_MSE = f"Testing MSE: {mse_test_rounded}"
+    Testing_RMSE = f"Testing RMSE: {rmse_test_rounded}"
+    Testing_MAE = f"Testing MAE: {mae_test_rounded}"
+
+    # 輸出評估指標
+    print(Training_MSE)
+    print(Training_RMSE)
+    print(Training_MAE)
+    print(Testing_MSE)
+    print(Testing_RMSE)
+    print(Testing_MAE)
+
+    # SARIMA模型結果視覺化
+    plt.figure(figsize=(12, 6))
+    plt.plot(train.index, train, label='Training data')  # 繪製訓練資料
+    plt.plot(test.index, test, label='Testing data')    # 繪製測試資料
+    plt.plot(train.index, y_pred_train, color='red', linestyle='--', label='Training prediction')  # 繪製訓練預測
+    plt.plot(test.index, y_pred_test, color='green', linestyle='--', label='Testing prediction')   # 繪製測試預測
+    plt.xlabel('Time')  # 設置x軸標籤
+    plt.ylabel('Average Price (元/公斤)')  # 設置y軸標籤
+    plt.title('SARIMA Model Time Series Analysis and Forecast')  # 設置圖表標題
+    plt.legend()
+
+    # 儲存圖表
+    sarima_model_plot = os.path.join(output_dir, 'sarima_model_analysis_1.png')
+    plt.savefig(sarima_model_plot)
+    plt.close()
+
+
 # 創建區塊函數
 def create_data_block(title, id):
     return html.Div([
@@ -270,23 +351,35 @@ def process_average_price(df):
 @app.callback(
     [Output('台北二-normal-distribution', 'children'),
      Output('台北二-box-plot', 'children'),
-     Output('台北二-average-price', 'children'),  # 新增這行
+     Output('台北二-average-price', 'children'), 
      Output('台北二-actual-predicted-plot', 'children')],  # 新增這行
     Input('url', 'pathname')
 )
 def update_taipei_mk2_plots(pathname):
+    """
+    更新回調函數，用於生成和顯示不同的圖表和資料表格。
+
+    參數:
+    pathname (str): 目錄路徑，用於選擇特定的數據源和生成圖表。
+
+    回傳:
+    dist_img (html.Img or html.P): 常態分布圖的HTML元素或錯誤信息。
+    box_plot_div (dcc.Graph or html.P): 箱型圖的HTML元素或錯誤信息。
+    avg_price_table (dash_table.DataTable or html.P): 平均價資料的HTML表格或錯誤信息。
+    """
     if pathname == '/taipei_mk2_irwin':
+        # 載入台北二的數據
         df = load_data('台北二')
         if df is not None:
-            # 常態分布圖
+            # 生成常態分布圖
             dist_img_src = generate_distribution_plot(df)
             dist_img = html.Img(src=dist_img_src, style={'width': '100%'}) if dist_img_src else html.P("無法生成分布圖", style={'textAlign': 'center', 'color': 'red'})
             
-            # 箱型圖
+            # 生成箱型圖
             box_plot = create_box_plot(df)
             box_plot_div = dcc.Graph(figure=box_plot) if box_plot is not None else html.P("無法生成箱型圖", style={'textAlign': 'center', 'color': 'red'})
             
-            # 平均價資料
+            # 處理平均價資料
             avg_price_data = process_average_price(df)
             avg_price_table = dash_table.DataTable(
                 data=avg_price_data.to_dict('records'),
@@ -295,12 +388,14 @@ def update_taipei_mk2_plots(pathname):
                 style_header={'fontWeight': 'bold'}
             ) if avg_price_data is not None else html.P("無法處理平均價資料", style={'textAlign': 'center', 'color': 'red'})
 
-            # 常態分布圖
-            dist_img_src = generate_distribution_plot(df)
-            dist_img = html.Img(src=dist_img_src, style={'width': '100%'}) if dist_img_src else html.P("無法生成分布圖", style={'textAlign': 'center', 'color': 'red'})
-            
-            return dist_img, box_plot_div, avg_price_table
-    return html.P("數據未加載", style={'textAlign': 'center', 'color': 'gray'}), html.P("數據未加載", style={'textAlign': 'center', 'color': 'gray'}), html.P("數據未加載", style={'textAlign': 'center', 'color': 'gray'})
+            # 生成SARIMA模型的時間序列分析與預測數據
+            SARIMA_model = train_and_predict_sarima(df, df, '/path/to/save/plots')  # 假設'/path/to/save/plots' 是儲存圖表的目錄
+            sarima_plot_img = html.Img(src=SARIMA_model, style={'width': '100%'}) if SARIMA_model else html.P("無法生成SARIMA模型圖", style={'textAlign': 'center', 'color': 'red'})
+
+            return dist_img, box_plot_div, avg_price_table, sarima_plot_img
+    
+    # 如果pathname不符合預期，返回錯誤信息
+    return html.P("數據未加載", style={'textAlign': 'center', 'color': 'gray'}), html.P("數據未加載", style={'textAlign': 'center', 'color': 'gray'}), html.P("數據未加載", style={'textAlign': 'center', 'color': 'gray'}), html.P("數據未加載", style={'textAlign': 'center', 'color': 'gray'})
 
 @app.callback(Output('page-content', 'children'),
               Input('url', 'pathname'))
