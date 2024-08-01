@@ -1,0 +1,42 @@
+<!-- base.html.jinja -->
+<!doctype html>
+<html lang="zh-tw">
+
+<head>
+  {% block head %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="{{url_for('static',filename='style/bootstrap.min.css')}}" rel="stylesheet">
+  <link href="{{url_for('static',filename='style/my.css')}}" rel="stylesheet">
+  <script src="{{url_for('static',filename='js/bootstrap.min.js')}}"></script>
+  <title>{% block title %}機器學習芒果分析{% endblock %}</title>
+  <style>
+    body {
+      font-size: 16px;
+    }
+
+    .container-fluid {
+      padding: 20px;
+      
+    }
+
+    .page-title {
+      text-align: center;
+      margin-bottom: 100px;
+      padding-bottom:30px;
+    }
+  </style>
+  {% endblock %}
+</head>
+
+<body>
+  <div class="container-fluid">
+    <h1 class="page-title">機器學習芒果分析</h1>
+    <main>
+      {% block main %}
+      {% endblock %}
+    </main>
+  </div>
+</body>
+
+</html>
