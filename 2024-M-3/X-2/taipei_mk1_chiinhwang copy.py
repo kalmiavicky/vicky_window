@@ -1,5 +1,5 @@
-# taipei_mk1_irwin.py 
-#芒果愛文 台北一
+#taipei_mk1_chiinhwang.py 
+# 芒果金煌 台北一 
 import pandas as pd 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -10,6 +10,7 @@ from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 from statsmodels.graphics.gofplots import qqplot
 import os
 import taipei_mk1_chiinhwang
+
 
 # 請整後的 "台北一" 市場資料
 def taipei_mk1(file_path, market):
@@ -27,9 +28,9 @@ def taipei_mk1(file_path, market):
     # 將'日期'轉換為datetime格式
     df_taipei['日期'] = pd.to_datetime(df_taipei['日期'])
     # 從'日期'中提取年, 月, 日
-    df_taipei['年份']= df_taipei['日期'].dt.year
-    df_taipei['月份']= df_taipei['日期'].dt.month
-    df_taipei['日']= df_taipei['日期'].dt.day
+    df_taipei['年份'] = df_taipei['日期'].dt.year
+    df_taipei['月份'] = df_taipei['日期'].dt.month
+    df_taipei['日'] = df_taipei['日期'].dt.day
 
     # 移除交易量中的逗號，並轉換為數值型態
     df_taipei['交易量(公斤)'] = df_taipei['交易量(公斤)'].str.replace(',', '').astype(float)
@@ -61,9 +62,9 @@ def taipei_mk1(file_path, market):
         df_year_data = pd.DataFrame(year_data)
         df_year_data['日期'] = pd.to_datetime(df_year_data['日期'])
         
-        # 生成完整的日期範圍（這裡假設所有資料都是4月到9月的）
+        # 生成完整的日期範圍（這裡假設所有資料都是4月到8月的）
         start_date = f'{year}-04-01'
-        end_date = f'{year}-09-30'
+        end_date = f'{year}-08-31'
         date_range = pd.date_range(start=start_date, end=end_date, freq='D')
         
         # 將日期設置為索引
@@ -89,7 +90,6 @@ def taipei_mk1(file_path, market):
         # 將交易量(公斤)轉換為整數
         df_year_data['交易量(公斤)'] = df_year_data['交易量(公斤)'].astype(int)
 
-
         # 填充市場和產品欄位
         market_value = year_data['市場'][0] if '市場' in year_data else '未知市場'
         product_value = year_data['產品'][0] if '產品' in year_data else '未知產品'
@@ -107,7 +107,7 @@ def taipei_mk1(file_path, market):
     return df_taipei_mk1
 
 # 盒鬚圖, 資料分布狀況, 偏態＆峰度, 常態分佈圖
-def anal_mk1_data(df_taipei_mk1, output_dir='analy_irwin_imgs'):
+def anal_mk1_data(df_taipei_mk1, output_dir='analy_chiinhwang_imgs'):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
@@ -126,11 +126,11 @@ def anal_mk1_data(df_taipei_mk1, output_dir='analy_irwin_imgs'):
     descr = anal_data.describe()
 
     # 求出四分位距(IQR)=Q3-Q1與上邊界(天花板)和下邊界(地板)
-    Q1=anal_data['平均價(元/公斤)'].quantile(0.25)
-    Q3=anal_data['平均價(元/公斤)'].quantile(0.75)
-    IQR=Q3-Q1
-    Upper=Q3+1.5*IQR
-    Lower=Q1-1.5*IQR
+    Q1 = anal_data['平均價(元/公斤)'].quantile(0.25)
+    Q3 = anal_data['平均價(元/公斤)'].quantile(0.75)
+    IQR = Q3 - Q1
+    Upper = Q3 + 1.5 * IQR
+    Lower = Q1 - 1.5 * IQR
 
     # 設置支持中文的字體(macbook => Arial Unicode MS)
     plt.rcParams['font.sans-serif'] = ['Arial Unicode MS']
@@ -144,41 +144,38 @@ def anal_mk1_data(df_taipei_mk1, output_dir='analy_irwin_imgs'):
     plt.savefig(box_plot)
     plt.close()
 
-    # skewness and kurtosis 偏態和峰度
-    skew = f"偏態(Skewness):{anal_data['平均價(元/公斤)'].skew():.2f}"
-    kurt = f"峰度(Kurtosis):{anal_data['平均價(元/公斤)'].kurt():.2f}"
+    # 偏態和峰度
+    skew = f"偏態(Skewness): {anal_data['平均價(元/公斤)'].skew():.2f}"
+    kurt = f"峰度(Kurtosis): {anal_data['平均價(元/公斤)'].kurt():.2f}"
 
-    n=1.5
-    #IQR = Q3-Q1
-    IQR = np.percentile(anal_data['平均價(元/公斤)'],75) - np.percentile(anal_data['平均價(元/公斤)'],25)
-    #outlier = Q3 + n*IQR
-    outlier=anal_data[anal_data['平均價(元/公斤)'] < np.percentile(anal_data['平均價(元/公斤)'],75)+n*IQR]
-    #outlier = Q1 - n*IQR
-    outlier=anal_data[anal_data['平均價(元/公斤)'] > np.percentile(anal_data['平均價(元/公斤)'],25)-n*IQR]
+    n = 1.5
+    # IQR = Q3 - Q1
+    IQR = np.percentile(anal_data['平均價(元/公斤)'], 75) - np.percentile(anal_data['平均價(元/公斤)'], 25)
+    # outlier = Q3 + n*IQR
+    outlier = anal_data[anal_data['平均價(元/公斤)'] < np.percentile(anal_data['平均價(元/公斤)'], 75) + n * IQR]
+    # outlier = Q1 - n*IQR
+    outlier = anal_data[anal_data['平均價(元/公斤)'] > np.percentile(anal_data['平均價(元/公斤)'], 25) - n * IQR]
 
     # 常態分布
     plt.figure()
     sns.histplot(anal_data['平均價(元/公斤)'], kde=True, element='step', stat="density", kde_kws=dict(cut=3), alpha=.4, edgecolor=(1, 1, 1, .4))
     plt.ylabel('密度')
     plt.xlabel('平均價(元/公斤)')
-    distribution_plot= os.path.join(output_dir, 'distribution_plot_1.png')
+    distribution_plot = os.path.join(output_dir, 'distribution_plot_1.png')
     plt.savefig(distribution_plot)
     plt.close()
 
-    return  all_descr, descr, box_plot, skew, kurt, distribution_plot
+    return all_descr, descr, box_plot, skew, kurt, distribution_plot
 
 # 自相關圖 (ACF) & 偏自相關圖 (PACF), SARIMA模型視覺化
 # 繪製結果（分開展示訓練和測試數據), 殘差隨時間變化和 Q-Q 圖
 # 時間序列分析, 準備進行SARIMA建模的資料
-def time_series(df_taipei_mk1, output_dir='analy_irwin_imgs'):
+def time_series(df_taipei_mk1, output_dir='analy_chiinhwang_imgs'):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
    
-   # 目標值
+    # 目標值
     y = df_taipei_mk1['平均價(元/公斤)']
-
-    # 顯示 DataFrame 的內容
-    print(df_taipei_mk1)
 
     # 分割資料為訓練集和測試集
     train_size = int(len(y) * 0.8)
@@ -201,8 +198,8 @@ def time_series(df_taipei_mk1, output_dir='analy_irwin_imgs'):
     plt.close()
 
     # 建立和訓練SARIMA模型
-    # 注意這裡設置了季節性順序為(1, 1, 1, 180)因為季節性是每年6個月（4到9月）
-    model = SARIMAX(train, order=(1, 1, 1), seasonal_order=(1, 1, 1, 180))
+    # 注意這裡設置了季節性順序為(1, 1, 1, 150)因為季節性是每年5個月（4到8月）
+    model = SARIMAX(train, order=(1, 1, 1), seasonal_order=(1, 1, 1, 150))
     model_fit = model.fit(method='lbfgs', maxiter=200, disp=False)
 
     # 預測
@@ -294,3 +291,25 @@ def time_series(df_taipei_mk1, output_dir='analy_irwin_imgs'):
     return acf_pacf_plot, Training_MSE, Training_RMSE, Training_MAE, Testing_MSE, Testing_RMSE, Testing_MAE, sarima_model_plot, combined_train_test_plot, residuals_plot
 
 
+
+# 市場
+market = '台北一'  # 這裡指定了市場名稱
+df_taipei_mk1 = taipei_mk1(file_path, market)
+print(df_taipei_mk1)
+print("=" * 100)
+
+all_descr, descr, box_plot_path, skew, kurt, distribution_plot_path = anal_mk1_data(df_taipei_mk1)
+print(all_descr)
+
+print("=" * 100)
+print(skew)
+print(kurt)
+
+acf_pacf_plot, Training_MSE, Training_RMSE, Training_MAE, Testing_MSE, Testing_RMSE, Testing_MAE, sarima_model_plot, combined_train_test_plot, residuals_plot = time_series(df_taipei_mk1, output_dir='analy_chiinhwang_imgs')
+print("=" * 100)
+print(Training_MSE)
+print(Training_RMSE)
+print(Training_MAE)
+print(Testing_MSE)
+print(Testing_RMSE)
+print(Testing_MAE)

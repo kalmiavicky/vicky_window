@@ -12,7 +12,7 @@ from flask import Flask, render_template, send_from_directory
 import taipei_mk1_irwin  # 導入自定義模組 taipei_mk1_irwin
 import os
 from jinja2 import Environment, FileSystemLoader
-from img_i import display_mango_images  # 導入圖片處理函數
+from img_i_1 import display_mango_images  # 導入圖片處理函數
 
 # 初始化 Flask 伺服器
 server = Flask(__name__)
