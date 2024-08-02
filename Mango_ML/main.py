@@ -1,26 +1,22 @@
+# main.py
+
 # 導入必要的庫
 import dash
 from dash import dcc, html, dash_table
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 import pandas as pd
-import plotly.graph_objs as go
-import plotly.express as px
-from flask import Flask, render_template, send_from_directory
-import taipei_mk1_irwin  # 導入自定義模組 taipei_mk1_irwin
-import test_script_C # 導入自定義模組 taipei_mk1_chiinhwang
 import os
 from jinja2 import Environment, FileSystemLoader
-from img_i import display_mango_images  # 導入圖片處理函數
+from img_process import display_mango_images  # 導入圖片處理函數
+import taipei_mk1_irwin  # 導入自定義模組 taipei_mk1_irwin
+import test_script_C  # 導入自定義模組 test_script_C
 
 # 初始化 Flask 伺服器
-server = Flask(__name__)
+server = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_callback_exceptions=True)
 
 # 設置 Jinja2 環境
 env = Environment(loader=FileSystemLoader('templates'))
-
-# 初始化 Dash 應用
-app = dash.Dash(__name__, server=server, external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_callback_exceptions=True)
 
 # 設定圖片目錄
 IMAGES_FOLDER = 'static/images'
@@ -41,8 +37,8 @@ def load_data(market, mango_type='愛文'):
             all_descr, _, _, _, _, _ = taipei_mk1_irwin.anal_mk1_data(df)
         elif mango_type == '金煌':
             file_path = r'C:\Users\win\Documents\vicky_window\Mango_ML\mangodata\MangoChinHwang.csv'
-            df = taipei_mk1_chiinhwang.taipei_mk1(file_path, market)
-            all_descr, _, _, _, _, _ = taipei_mk1_chiinhwang.anal_mk1_data(df)
+            df = test_script_C.taipei_mk1(file_path, market)
+            all_descr, _, _, _, _, _ = test_script_C.anal_mk1_data(df)
         else:
             raise ValueError("不支援的芒果類型")
         
@@ -192,7 +188,7 @@ app.layout = html.Div([
             dbc.Button("首頁", color="primary", className="me-1", href="/", size="sm"),
             dbc.Button("芒果愛文 台北一", color="secondary", className="me-1", href="/taipei_mk1_irwin", size="sm"),
             dbc.Button("芒果愛文 台北二", color="secondary", className="me-1", href="/taipei_mk2_irwin", size="sm"),
-            dbc.Button("芒果金煌 台北一", color="secondary", className="me-1", href="/taipei_mk1_chiinhwang", size="sm"),
+            dbc.Button("芒果金煌 台北一", color="secondary", className="me-1", href="/test_script_C", size="sm"),
             dbc.Button("芒果金煌 台北二", color="secondary", className="me-1", href="/taipei_mk2_chiinhwang", size="sm"),
         ], style={'display': 'flex', 'justifyContent': 'center', 'marginBottom': '20px'}),
         html.Div(id='page-content')
@@ -229,7 +225,7 @@ def display_page(pathname):
             create_description_section(all_descr, '台北二', '愛文'),
             create_image_section('台北二', '愛文')
         ])
-    elif pathname == '/taipei_mk1_chiinhwang':
+    elif pathname == '/test_script_C':
         df, all_descr = load_data('台北一', '金煌')
         return html.Div([
             create_data_table(df, '台北一', '金煌'),

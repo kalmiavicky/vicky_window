@@ -1,4 +1,4 @@
-# img_i.py
+# img_process.py
 
 import base64
 import os
@@ -25,21 +25,35 @@ def display_mango_images(location):
     :param location: 位置名稱
     :return: 圖片 Base64 編碼字符串列表
     """
-    if location == "台北一":
+    if location == "芒果愛文 台北一":
         image_paths = [
-            r"C:\Users\win\Documents\vicky_window\Mango_ML\analy_irwin_imgs\box_dis_1.png",
-            r"C:\Users\win\Documents\vicky_window\Mango_ML\analy_irwin_imgs\acf_pacf_plot_1.png",
-            r"C:\Users\win\Documents\vicky_window\Mango_ML\analy_irwin_imgs\residuals_qq_plot_1.png",
-            r"C:\Users\win\Documents\vicky_window\Mango_ML\analy_irwin_imgs\sarima_model_analysis_1.png",
-            r"C:\Users\win\Documents\vicky_window\Mango_ML\analy_irwin_imgs\train_test_plot_1.png"
+            r"C:\Users\win\Documents\vicky_window\2024-M-3\analy_irwin_imgs\acf_pacf_plot_1.png",
+            r"C:\Users\win\Documents\vicky_window\2024-M-3\analy_irwin_imgs\residuals_qq_plot_1.png",
+            r"C:\Users\win\Documents\vicky_window\2024-M-3\analy_irwin_imgs\sarima_model_analysis_1.png",
+            r"C:\Users\win\Documents\vicky_window\2024-M-3\analy_irwin_imgs\train_test_plot_1.png"
         ]
-    elif location == "台北二":
+    elif location == "芒果愛文 台北二":
         image_paths = [
-            r"C:\Users\win\Documents\vicky_window\Mango_ML\analy_irwin_imgs\box_dis_2.png",
-            r"C:\Users\win\Documents\vicky_window\Mango_ML\analy_irwin_imgs\acf_pacf_plot_2.png",
-            r"C:\Users\win\Documents\vicky_window\Mango_ML\analy_irwin_imgs\residuals_qq_plot_2.png",
-            r"C:\Users\win\Documents\vicky_window\Mango_ML\analy_irwin_imgs\sarima_model_analysis_2.png",
-            r"C:\Users\win\Documents\vicky_window\Mango_ML\analy_irwin_imgs\train_test_plot_2.png"
+            r"C:\Users\win\Documents\vicky_window\2024-M-3\analy_irwin_imgs\acf_pacf_plot_2.png",
+            r"C:\Users\win\Documents\vicky_window\2024-M-3\analy_irwin_imgs\residuals_qq_plot_2.png",
+            r"C:\Users\win\Documents\vicky_window\2024-M-3\analy_irwin_imgs\sarima_model_analysis_2.png",
+            r"C:\Users\win\Documents\vicky_window\2024-M-3\analy_irwin_imgs\train_test_plot_2.png"
+        ]
+    elif location == "芒果金煌 台北一":
+        image_paths = [
+            r"C:\Users\win\Documents\vicky_window\Mango_ML\analy_chiinhwang_imgs\box_dis_1.png",
+            r"C:\Users\win\Documents\vicky_window\Mango_ML\analy_chiinhwang_imgs\acf_pacf_plot_1.png",
+            r"C:\Users\win\Documents\vicky_window\Mango_ML\analy_chiinhwang_imgs\residuals_qq_plot_1.png",
+            r"C:\Users\win\Documents\vicky_window\Mango_ML\analy_chiinhwang_imgs\sarima_model_analysis_1.png",
+            r"C:\Users\win\Documents\vicky_window\Mango_ML\analy_chiinhwang_imgs\train_test_plot_1.png"
+        ]
+    elif location == "芒果金煌 台北二":
+        image_paths = [
+            r"C:\Users\win\Documents\vicky_window\Mango_ML\analy_chiinhwang_imgs\box_dis_2.png",
+            r"C:\Users\win\Documents\vicky_window\Mango_ML\analy_chiinhwang_imgs\acf_pacf_plot_2.png",
+            r"C:\Users\win\Documents\vicky_window\Mango_ML\analy_chiinhwang_imgs\residuals_qq_plot_2.png",
+            r"C:\Users\win\Documents\vicky_window\Mango_ML\analy_chiinhwang_imgs\sarima_model_analysis_2.png",
+            r"C:\Users\win\Documents\vicky_window\Mango_ML\analy_chiinhwang_imgs\train_test_plot_2.png"
         ]
     else:
         image_paths = []
