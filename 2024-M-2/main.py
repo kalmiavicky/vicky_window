@@ -10,6 +10,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import io
 import base64
+import matplotlib
+matplotlib.use('Agg')  # 設置 Matplotlib 後端為 'Agg''
 
 # 初始化 Flask 伺服器
 server = Flask(__name__)
@@ -108,15 +110,31 @@ if __name__ == "__main__":
     # 輸出結果
     for key, value in results.items():
         print(f"{key}: {value:.2f}")
+        
+# 新增函數：計算全部資料分布狀況
+def calculate_all_distribution(df):
+    """
+    計算數據框的全部資料分布狀況
+    
+    參數:
+    df (pandas.DataFrame): 要分析的數據框
+    
+    返回:
+    pandas.DataFrame: 包含描述性統計的數據框
+    """
+    return df.describe()
 
-
-# 創建一個函數來生成常態分布圖
+# 修改生成分布圖的函數
 def generate_distribution_plot(df, column='平均價(元/公斤)'):
     try:
         plt.figure(figsize=(8, 6))
         sns.histplot(df[column], kde=True, element='step', stat="density", kde_kws=dict(cut=3), alpha=.4, edgecolor=(1, 1, 1, .4))
         plt.ylabel('密度')
         plt.xlabel(column)
+        
+        # 使用中文字體
+        plt.rcParams['font.sans-serif'] = ['Microsoft JhengHei']
+        plt.rcParams['axes.unicode_minus'] = False
         
         # 將圖像保存到內存中
         buf = io.BytesIO()
@@ -265,7 +283,7 @@ def create_block_group(market):
         'boxShadow': '0 0 5px rgba(0,0,0,0.1)'
     })
 
-# 定義應用佈局
+# 修改應用佈局
 def create_layout():
     return html.Div([
         dcc.Location(id='url', refresh=False),
@@ -278,7 +296,8 @@ def create_layout():
                 dbc.Button("芒果金煌 台北一", color="secondary", className="me-1", href="/taipei_mk1_chiinhwang", size="sm"),
                 dbc.Button("芒果金煌 台北二", color="secondary", className="me-1", href="/taipei_mk2_chiinhwang", size="sm"),
             ], style={'display': 'flex', 'justifyContent': 'center', 'marginBottom': '20px'}),
-            html.Div(id='page-content')
+            html.Div(id='page-content'),
+            dcc.Store(id='previous-pathname', storage_type='session')  # 新增：用於存儲上一次的路徑
         ], style={
             'maxWidth': '1200px',
             'margin': '0 auto',
@@ -290,6 +309,8 @@ def create_layout():
     ])
 
 app.layout = create_layout()
+
+
 
 # MT1-1 平均價資料處理函數
 def process_average_price(df):
@@ -323,11 +344,29 @@ def process_average_price(df):
         print(f"處理平均價資料時發生錯誤：{e}")
         return None
 
-# 更新回調函數
-def update_taipei_mk2_plots(pathname):
+# 修改更新回調函數
+@app.callback(
+    [Output('台北二-average-price', 'children'),
+     Output('台北二-normal-distribution', 'children'),
+     Output('台北二-box-plot', 'children')],
+    Input('url', 'pathname')
+)
+def update_taipei_mk2_data(pathname):
     if pathname == '/taipei_mk2_irwin':
         df = load_data('台北二')
         if df is not None:
+            # 計算全部資料分布狀況
+            all_descr = calculate_all_distribution(df)
+            
+            # 創建數據表格來顯示全部資料分布狀況
+            distribution_table = dash_table.DataTable(
+                columns=[{"name": i, "id": i} for i in all_descr.columns],
+                data=all_descr.reset_index().to_dict('records'),
+                style_table={'overflowX': 'auto'},
+                style_cell={'textAlign': 'left', 'padding': '5px'},
+                style_header={'fontWeight': 'bold'}
+            )
+            
             # 常態分布圖
             dist_img_src = generate_distribution_plot(df)
             dist_img = html.Img(src=dist_img_src, style={'width': '100%'}) if dist_img_src else html.P("無法生成分布圖", style={'textAlign': 'center', 'color': 'red'})
@@ -345,10 +384,7 @@ def update_taipei_mk2_plots(pathname):
                 style_header={'fontWeight': 'bold'}
             ) if avg_price_data is not None else html.P("無法處理平均價資料", style={'textAlign': 'center', 'color': 'red'})
 
-            # 四分位數距數據
-            # (已經在 avg_price_table 中處理了四分位數距數據，這裡可不再重複處理)
-
-            return dist_img, box_plot_div, avg_price_table
+            return avg_price_table, dist_img, box_plot_div
         
     return (
         html.P("數據未加載", style={'textAlign': 'center', 'color': 'gray'}),
@@ -356,8 +392,12 @@ def update_taipei_mk2_plots(pathname):
         html.P("數據未加載", style={'textAlign': 'center', 'color': 'gray'})
     )
 
-@app.callback(Output('page-content', 'children'),
-              Input('url', 'pathname'))
+@app.callback(
+    [Output('台北二-average-price', 'children'),
+     Output('台北二-normal-distribution', 'children'),
+     Output('台北二-box-plot', 'children')],
+    Input('url', 'pathname')
+)
 def display_page(pathname):
     print(f"當前路徑: {pathname}")  # 添加這行來檢查路徑
     if pathname == '/taipei_mk1_irwin':
